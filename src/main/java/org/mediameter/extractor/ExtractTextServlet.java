@@ -1,7 +1,6 @@
 package org.mediameter.extractor;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -20,7 +19,7 @@ import de.l3s.boilerpipe.extractors.ArticleExtractor;
 
 public class ExtractTextServlet extends HttpServlet {
 
-    public static String VERSION = "0.1";
+    public static String VERSION = "0.5";
     public static String STATUS_OK = "ok";
     public static String STATUS_ERROR = "error";
     
@@ -37,6 +36,7 @@ public class ExtractTextServlet extends HttpServlet {
 
         long startTime = System.currentTimeMillis();
         HashMap results = new HashMap();
+        results.put("version",VERSION);
         String urlString = request.getParameter("url");
         logger.info("Request to parse "+urlString);
         if(urlString==null){
