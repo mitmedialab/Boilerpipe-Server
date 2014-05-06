@@ -11,15 +11,23 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 
 import com.google.gson.Gson;
 
 import de.l3s.boilerpipe.BoilerpipeProcessingException;
+import de.l3s.boilerpipe.BoilerpipeExtractor;
+import de.l3s.boilerpipe.document.TextDocument;
 import de.l3s.boilerpipe.extractors.ArticleExtractor;
+import de.l3s.boilerpipe.extractors.CommonExtractors;
+import de.l3s.boilerpipe.sax.BoilerpipeSAXInput;
+import de.l3s.boilerpipe.sax.HTMLDocument;
+import de.l3s.boilerpipe.sax.HTMLFetcher;
+
 
 public class ExtractTextServlet extends HttpServlet {
 
-    public static String VERSION = "0.5";
+    public static String VERSION = "0.5.1";
     public static String STATUS_OK = "ok";
     public static String STATUS_ERROR = "error";
     
@@ -44,15 +52,31 @@ public class ExtractTextServlet extends HttpServlet {
         } else {
             try {
                 URL url = new URL(urlString);
-                String text = ArticleExtractor.INSTANCE.getText(url);
+                final HTMLDocument htmlDoc = HTMLFetcher.fetch(url);
+                final TextDocument doc = new BoilerpipeSAXInput(htmlDoc.toInputSource()).getTextDocument();
+                String title = doc.getTitle();
+                String text = ArticleExtractor.INSTANCE.getText(doc);
+                
+                logger.info(title);
                 logger.info(text);
                 logger.info("done");
+                
                 HashMap info = new HashMap();
                 info.put("url",urlString);
+                info.put("title", title);
                 info.put("text", text);
+                
                 results.put("results",info);
                 results.put("status",STATUS_OK);
             } catch (BoilerpipeProcessingException e) {
+                logger.error(e.toString());
+                HashMap error = new HashMap();
+                error.put("type",e.getClass().getName());
+                error.put("message",e.getMessage());
+                results.put("error", error);
+                results.put("status",STATUS_ERROR);
+            }
+            catch (SAXException e) {
                 logger.error(e.toString());
                 HashMap error = new HashMap();
                 error.put("type",e.getClass().getName());
