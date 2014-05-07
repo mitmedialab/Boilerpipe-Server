@@ -1,7 +1,7 @@
 Boilerplate Server
 ------------------
 
-This is a tiny wrapper around the [Boilerplate Text Extraction library](https://code.google.com/p/boilerpipe/).
+This is a tiny wrapper around the [Boilerpipe Text Extraction library](https://code.google.com/p/boilerpipe/).
 
 Developing
 ----------
