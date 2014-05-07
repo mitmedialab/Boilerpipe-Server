@@ -16,23 +16,24 @@ import org.xml.sax.SAXException;
 import com.google.gson.Gson;
 
 import de.l3s.boilerpipe.BoilerpipeProcessingException;
-import de.l3s.boilerpipe.BoilerpipeExtractor;
 import de.l3s.boilerpipe.document.TextDocument;
 import de.l3s.boilerpipe.extractors.ArticleExtractor;
-import de.l3s.boilerpipe.extractors.CommonExtractors;
 import de.l3s.boilerpipe.sax.BoilerpipeSAXInput;
 import de.l3s.boilerpipe.sax.HTMLDocument;
 import de.l3s.boilerpipe.sax.HTMLFetcher;
 
-
 public class ExtractTextServlet extends HttpServlet {
 
-    public static String VERSION = "0.5.1";
+    public static String VERSION = "0.6";
     public static String STATUS_OK = "ok";
     public static String STATUS_ERROR = "error";
     
     private static final Logger logger = LoggerFactory.getLogger(ExtractTextServlet.class);
     private static Gson gson = new Gson();
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        doGet(request,response);
+    }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
@@ -57,8 +58,8 @@ public class ExtractTextServlet extends HttpServlet {
                 String title = doc.getTitle();
                 String text = ArticleExtractor.INSTANCE.getText(doc);
                 
-                logger.info(title);
-                logger.info(text);
+                logger.info("  Title: \""+title+"\"");
+                logger.debug(text);
                 logger.info("done");
                 
                 HashMap info = new HashMap();
