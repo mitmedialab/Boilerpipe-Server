@@ -49,9 +49,6 @@ To test it out, hit this url in a browser and you should get some JSON back:
 http://localhost:8080/extractor/text?url=http://civic.mit.edu
 ```
 
-But in your scripts you should do this as an HTTP POST, not a GET, so you can send in 
-long strings.
-
 Releasing
 ---------
 

@@ -11,11 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
 
 import com.google.gson.Gson;
 
-import de.l3s.boilerpipe.BoilerpipeProcessingException;
 import de.l3s.boilerpipe.document.TextDocument;
 import de.l3s.boilerpipe.extractors.ArticleExtractor;
 import de.l3s.boilerpipe.sax.BoilerpipeSAXInput;
@@ -24,16 +22,12 @@ import de.l3s.boilerpipe.sax.HTMLFetcher;
 
 public class ExtractTextServlet extends HttpServlet {
 
-    public static String VERSION = "0.6";
+    public static String VERSION = "0.7";
     public static String STATUS_OK = "ok";
     public static String STATUS_ERROR = "error";
     
     private static final Logger logger = LoggerFactory.getLogger(ExtractTextServlet.class);
     private static Gson gson = new Gson();
-
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
-        doGet(request,response);
-    }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
@@ -69,15 +63,7 @@ public class ExtractTextServlet extends HttpServlet {
                 
                 results.put("results",info);
                 results.put("status",STATUS_OK);
-            } catch (BoilerpipeProcessingException e) {
-                logger.error(e.toString());
-                HashMap error = new HashMap();
-                error.put("type",e.getClass().getName());
-                error.put("message",e.getMessage());
-                results.put("error", error);
-                results.put("status",STATUS_ERROR);
-            }
-            catch (SAXException e) {
+            } catch (Exception e) {
                 logger.error(e.toString());
                 HashMap error = new HashMap();
                 error.put("type",e.getClass().getName());
